@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    text-align: center;
+    overflow: hidden;
+}
+
+.container {
+    margin-top: 100px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    display: inline-block;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+input, textarea {
+    padding: 10px;
+    margin: 10px;
+    width: 80%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.yes { background: green; color: white; }
+.no { background: red; color: white; position: absolute; }
+
+.hidden { display: none; }
+
+/* Falling hearts animation */
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔐 LOCK SCREEN -->
+<div class="container" id="lockScreen">
+    <div class="card">
+        <h2>🔐 Private Message</h2>
+        <p>Enter the nickname you gave me 🥺</p>
+        <input type="password" id="codeInput" placeholder="Enter nickname">
+        <br>
+        <button onclick="unlock()">Unlock ❤️</button>
+        <p id="error" style="color:red;"></p>
+    </div>
+</div>
+
+<!-- 💖 MAIN APP -->
+<div class="container hidden" id="mainApp">
+    <div class="card">
+        <h1>Hey Radhika ❤️</h1> <!-- 🔥 CHANGE NAME HERE -->
+        <p>
+            I know I messed up… and I’m really sorry 😔<br>
+            You mean a lot to me, and I don’t want you to be angry💛
+        </p>
+
+        <h3>Will you forgive me? 🥺</h3>
+
+        <button class="yes" onclick="forgive()">Yes 😊</button>
+        <button class="no" id="noBtn" onmouseover="moveBtn()">No 😜</button>
+
+        <h4>Or tell me how you feel:</h4>
+        <textarea id="msg" placeholder="Type here..."></textarea>
+        <br>
+        <button onclick="saveMsg()">Send 💌</button>
+
+        <p id="response"></p>
+    </div>
+</div>
+
+<script>
+
+// 🔐 CHANGE THIS (nickname she gave you)
+const secretCode = "jhaplu";
+
+// Unlock logic
+function unlock() {
+    const input = document.getElementById("codeInput").value;
+
+    if (input.toLowerCase() === secretCode.toLowerCase()) {
+        document.getElementById("lockScreen").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+    } else {
+        document.getElementById("error").innerText = "Wrong nickname 😢 Try again...";
+    }
+}
+
+// ❤️ Create falling hearts
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.innerHTML = "❤️";
+    heart.style.position = "fixed";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.top = "-10px";
+    heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+    heart.style.animation = "fall 3s linear";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 3000);
+}
+
+// 💖 When she clicks YES
+function forgive() {
+    document.getElementById("response").innerHTML =
+        "Thank you ❤️ This really means a lot to me… 😊";
+
+    // Start animation
+    let interval = setInterval(createHeart, 200);
+
+    // Stop + show final screen
+    setTimeout(() => {
+        clearInterval(interval);
+
+        document.body.innerHTML = `
+            <div style="margin-top:150px;font-family:sans-serif;">
+                <h1>❤️ Thank You ❤️</h1>
+                <p>This made my day… 😊</p>
+            </div>
+        `;
+
+        // Try to close tab
+        setTimeout(() => {
+            window.open('', '_self');
+            window.close();
+        }, 2000);
+
+    }, 3000);
+}
+
+// 💬 Message (no storage)
+function saveMsg() {
+    const msg = document.getElementById("msg").value;
+
+    if (!msg.trim()) {
+        document.getElementById("response").innerText = "At least say something 😅";
+        return;
+    }
+
+    document.getElementById("response").innerHTML =
+        "I understand… and I respect how you feel 💛";
+}
+
+// 😜 Move NO button
+function moveBtn() {
+    const btn = document.getElementById("noBtn");
+    btn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+    btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+}
+
+</script>
+
+</body>
+</html>
