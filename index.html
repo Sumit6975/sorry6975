@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>For You ❤️</title>
 
   <style>
@@ -9,74 +10,88 @@
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg,#ff9a9e,#fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       text-align: center;
       overflow: hidden;
     }
 
-    /* container */
     .container {
-      margin-top: 100px;
+      width: 90%;
+      max-width: 400px;
     }
 
     .card {
       background: white;
-      padding: 30px;
+      padding: 20px;
       border-radius: 20px;
-      display: inline-block;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    .hidden { display: none; }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
 
-    /* buttons */
     button {
       padding: 10px 20px;
-      margin: 10px;
+      margin: 8px;
       border-radius: 10px;
       border: none;
       cursor: pointer;
+      font-size: 14px;
     }
 
     .yes { background: #28a745; color: white; }
-    .no { background: #dc3545; color: white; position: absolute; }
+    .no { background: #dc3545; color: white; }
 
-    /* floating items */
-    .item {
-      position: absolute;
-      animation: floatUp 6s linear infinite;
+    .hidden { display: none; }
+
+    /* floating hearts */
+    .heart {
+      position: fixed;
+      color: red;
+      animation: float 5s linear infinite;
     }
 
-    @keyframes floatUp {
+    @keyframes float {
       0% { transform: translateY(100vh); opacity: 1; }
       100% { transform: translateY(-10vh); opacity: 0; }
     }
 
+    /* mobile */
+    @media (max-width: 480px) {
+      h1 { font-size: 20px; }
+      h2 { font-size: 18px; }
+      h3 { font-size: 16px; }
+    }
   </style>
 </head>
 
 <body>
 
-<!-- 🎵 MUSIC -->
-<audio id="bgMusic" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
-
-<!-- 🔐 LOCK -->
+<!-- 🔐 LOCK SCREEN -->
 <div class="container" id="lockScreen">
   <div class="card">
     <h2>🔐 Private Message</h2>
     <p>Enter the nickname you gave me 🥺</p>
-    <input type="password" id="codeInput">
+    <input type="password" id="codeInput" placeholder="Enter nickname">
     <br>
     <button onclick="unlock()">Unlock ❤️</button>
     <p id="error" style="color:red;"></p>
   </div>
 </div>
 
-<!-- ❤️ MAIN -->
+<!-- ❤️ MAIN APP -->
 <div class="container hidden" id="mainApp">
   <div class="card">
-    <h1>Hey Radhika ❤️</h1>
+    <h1>Hey Radhika❤️</h1>
+
     <h2 id="typing"></h2>
 
     <h3>Will you forgive me? 🥺</h3>
@@ -90,8 +105,8 @@
 
 <script>
 
-  // 🔐 secret nickname
-  const secretCode = "jhaplu"; // change this
+  // 🔐 CHANGE THIS
+  const secretCode = "jhaplu";
 
   // unlock
   function unlock() {
@@ -100,58 +115,56 @@
     if (input.toLowerCase() === secretCode.toLowerCase()) {
       document.getElementById("lockScreen").classList.add("hidden");
       document.getElementById("mainApp").classList.remove("hidden");
-
-      document.getElementById("bgMusic").play().catch(()=>{});
       typeEffect();
     } else {
-      document.getElementById("error").innerText = "Wrong nickname 😢";
+      document.getElementById("error").innerText = "Wrong nickname 😢 Try again...";
     }
   }
 
-  // typing effect
-  const text = "I know I messed up… but you mean a lot to me ❤️";
-  let i = 0;
+  // 💬 PLAYFUL MESSAGE (UPDATED)
+  const text = "I messed up… but uninstall mat karna 😅 Update aa raha hai — better version of me ❤️";
 
+  let i = 0;
   function typeEffect() {
     if (i < text.length) {
       document.getElementById("typing").innerHTML += text.charAt(i);
       i++;
-      setTimeout(typeEffect, 50);
+      setTimeout(typeEffect, 40);
     }
   }
 
-  // forgive → final screen
+  // ❤️ forgive
   function forgive() {
-    document.body.innerHTML = `
-    <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#ff758c;color:white;font-size:28px;text-align:center;flex-direction:column;">
-        Thank you ❤️<br>I promise I’ll make everything right 😊
-    </div>`;
+    document.getElementById("response").innerHTML =
+      "Thank you ❤️ Ab smile bhi kar do na 😄";
   }
 
-  // moving NO button
+  // 😜 move NO button (mobile safe)
   function moveBtn() {
     const btn = document.getElementById("noBtn");
-    btn.style.top = Math.random() * (window.innerHeight - 50) + "px";
-    btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+
+    const maxX = window.innerWidth - 100;
+    const maxY = window.innerHeight - 100;
+
+    btn.style.position = "fixed";
+    btn.style.left = Math.random() * maxX + "px";
+    btn.style.top = Math.random() * maxY + "px";
   }
 
-  // floating animations (hearts + chocolates + gifts)
-  const emojis = ["❤️","🍫","🎁"];
+  // 💖 floating hearts
+  function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random()*20+10)+"px";
 
-  function createItem() {
-    const item = document.createElement("div");
-    item.classList.add("item");
+    document.body.appendChild(heart);
 
-    item.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
-    item.style.left = Math.random() * 100 + "vw";
-    item.style.fontSize = (Math.random()*20 + 15) + "px";
-
-    document.body.appendChild(item);
-
-    setTimeout(() => item.remove(), 6000);
+    setTimeout(() => heart.remove(), 5000);
   }
 
-  setInterval(createItem, 300);
+  setInterval(createHeart, 400);
 
 </script>
 
